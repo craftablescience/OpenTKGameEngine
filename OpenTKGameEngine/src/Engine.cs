@@ -1,41 +1,44 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
+﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace OpenTKGameEngine  {
 	public class Engine : GameWindow
 	{
-		public Engine(string title = "Game Window", WindowIcon icon = null, bool startFullscreen = false, bool startVisible = true, double renderFrequency = 0.0, double updateFrequency = 0.0, bool multithreaded = false) : base(SetGameWindowSettingsOnInit(renderFrequency, updateFrequency, multithreaded), SetNativeWindowSettingsOnInit(title, icon, startFullscreen, startVisible))
+		public Color4 ClearColor { get; set; } = Color4.Black;
+
+		public Engine(string title = "GameWindow") : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title))
 		{
 		}
 
-		private static GameWindowSettings SetGameWindowSettingsOnInit(double renderFrequency, double updateFrequency, bool multithreaded)
-		{
-			var settings = new GameWindowSettings
-			{
-				RenderFrequency = renderFrequency,
-				UpdateFrequency = updateFrequency,
-				IsMultiThreaded = multithreaded
-			};
-			return settings;
-		}
-
-		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, WindowIcon icon, bool startFullscreen, bool startVisible)
+		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title)
 		{
 			var settings = new NativeWindowSettings
 			{
-				Title = title,
-				Icon = icon,
-				IsFullscreen = startFullscreen,
-				StartVisible = startVisible
+				Title = title
 			};
 			return settings;
+		}
+		
+		protected override void OnLoad()
+		{
+			GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
+			Load();
+			base.OnLoad();
+		}
+
+		public virtual void Load()
+		{
+			// overwrite in inherited classes
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs evt)
 		{
+			GL.Clear(ClearBufferMask.ColorBufferBit);
+			// ---
+			
 			KeyboardState input = KeyboardState;
 
 			if (input.IsKeyDown(Keys.Escape))
@@ -43,7 +46,32 @@ namespace OpenTKGameEngine  {
 				DestroyWindow();
 			}
 			
+			Update();
+			// ---
+			Context.SwapBuffers();
 			base.OnUpdateFrame(evt);
+		}
+		
+		public virtual void Update()
+		{
+			// overwrite in inherited classes
+		}
+		
+		protected override void OnResize(ResizeEventArgs e)
+		{
+			GL.Viewport(0, 0, Size.X, Size.Y);
+			base.OnResize(e);
+		}
+
+		protected override void OnUnload()
+		{
+			UnLoad();
+			base.OnUnload();
+		}
+		
+		public virtual void UnLoad()
+		{
+			// overwrite in inherited classes
 		}
 	}
 }

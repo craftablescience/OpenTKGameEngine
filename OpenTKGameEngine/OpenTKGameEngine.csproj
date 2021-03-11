@@ -12,8 +12,4 @@
       <PackageReference Include="SupersonicSound" Version="4.1.1" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="src\core" />
-    </ItemGroup>
-
 </Project>
