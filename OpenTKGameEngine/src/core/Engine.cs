@@ -4,21 +4,24 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace OpenTKGameEngine  {
+namespace OpenTKGameEngine.Core  {
 	public class Engine : GameWindow
 	{
 		public Color4 ClearColor { get; set; } = Color4.Black;
 
-		public Engine(string title = "GameWindow") : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title))
+		public Engine(string[] args, string title = "GameWindow", Vector2i? size = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size))
 		{
 		}
 
-		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title)
+		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size)
 		{
 			var settings = new NativeWindowSettings
 			{
-				Title = title
+				Title = title,
+				WindowBorder = WindowBorder.Fixed,
 			};
+			if (size.HasValue)
+				settings.Size = size.Value;
 			return settings;
 		}
 		
@@ -29,7 +32,7 @@ namespace OpenTKGameEngine  {
 			base.OnLoad();
 		}
 
-		public virtual void Load()
+		public new virtual void Load()
 		{
 			// overwrite in inherited classes
 		}

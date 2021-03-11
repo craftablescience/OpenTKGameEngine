@@ -6,10 +6,13 @@
 
     <ItemGroup>
       <PackageReference Include="BulletSharp" Version="0.11.1" />
-      <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
-      <PackageReference Include="log4net" Version="2.0.12" />
+      <PackageReference Include="CSCore" Version="1.2.1.2" />
       <PackageReference Include="OpenTK" Version="4.5.0" />
-      <PackageReference Include="SupersonicSound" Version="4.1.1" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="src\physics" />
     </ItemGroup>
 
 </Project>

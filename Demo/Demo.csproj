@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>Demo</RootNamespace>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,11 +13,23 @@
 
     <ItemGroup>
       <None Remove="shaders\triangle.frag" />
-      <Content Include="shaders\triangle.frag">
+      <None Remove="shaders\triangle.vert" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BulletSharp" Version="0.11.1" />
+      <PackageReference Include="CSCore" Version="1.2.1.2" />
+      <PackageReference Include="OpenTK" Version="4.5.0" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="shaders\demo1.frag" />
+      <Content Include="shaders\demo1.frag">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="shaders\triangle.vert" />
-      <Content Include="shaders\triangle.vert">
+      <None Remove="shaders\demo1.vert" />
+      <Content Include="shaders\demo1.vert">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
