@@ -12,7 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="src\physics" />
+      <Content Include="Assets\icon.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
