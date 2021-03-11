@@ -25,11 +25,18 @@
 
     <ItemGroup>
       <None Remove="shaders\demo1.frag" />
-      <Content Include="shaders\demo1.frag">
+      <None Remove="shaders\demo1.vert" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Resources\Shaders\demo1.frag">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="shaders\demo1.vert" />
-      <Content Include="shaders\demo1.vert">
+      <Content Include="Resources\Shaders\demo1.vert">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\Textures\container.png" />
+      <Content Include="Resources\Textures\container.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

@@ -20,7 +20,7 @@ namespace Demo {
 		private int _vertexBufferId;
 		private int _elementBufferId;
 		private int _vertexArrayId;
-		private UnlitShader _triangleShader;
+		private Shader _triangleShader;
 		
 		private Demo(string[] args) : base(args, "Demo")
 		{
@@ -42,7 +42,7 @@ namespace Demo {
 			_elementBufferId = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferId);
 			GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
-			_triangleShader = new UnlitShader("shaders/demo1.vert", "shaders/demo1.frag");
+			_triangleShader = new UnlitShader("Resources/Shaders/demo1.vert", "Resources/Shaders/demo1.frag");
 			_triangleShader.Use();
 			GL.VertexAttribPointer(_triangleShader.GetAttribLocation("position"), 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 			GL.EnableVertexAttribArray(_triangleShader.GetAttribLocation("position"));
