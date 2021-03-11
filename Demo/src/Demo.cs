@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using System.Linq;
+using OpenTK.Graphics.OpenGL;
 using OpenTKGameEngine.Core;
 using OpenTKGameEngine.Render;
 using OpenTKGameEngine.Render.Shader;
@@ -8,8 +9,23 @@ namespace Demo {
 	{
 		private static void Main(string[] args)
 		{
-			var engine = new DemoTextured(args);
-			engine.Run();
+			string[] acceptableInput = {"0", "1"};
+			System.Console.WriteLine("Color (0) or texture demo (1)?");
+			string i;
+			while (!acceptableInput.Contains(i = System.Console.In.ReadLine()))
+			{
+				System.Console.WriteLine("0 or 1 please.");
+			}
+			if (i.Equals("0"))
+			{
+				var engine = new DemoColor(args);
+				engine.Run();
+			}
+			else if (i.Equals("1"))
+			{
+				var engine = new DemoTextured(args);
+				engine.Run();
+			}
 		}
 	}
 	

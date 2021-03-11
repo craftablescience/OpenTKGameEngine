@@ -10,20 +10,10 @@ namespace OpenTKGameEngine.Render.Shader
     public abstract class Shader : IDisposable
     {
         protected int Handle { get; }
-        private readonly Dictionary<string, int> _uniformLocations;
 
         protected Shader()
         {
             Handle = GL.CreateProgram();
-            
-            GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out int numberOfUniforms);
-            _uniformLocations = new Dictionary<string, int>();
-            for (var i = 0; i < numberOfUniforms; i++)
-            {
-                string key = GL.GetActiveUniform(Handle, i, out _, out _);
-                int location = GL.GetUniformLocation(Handle, key);
-                _uniformLocations.Add(key, location);
-            }
         }
         
         public void Use()
@@ -76,25 +66,25 @@ namespace OpenTKGameEngine.Render.Shader
         public void SetInt(string name, int data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform1(_uniformLocations[name], data);
+            GL.Uniform1(GL.GetUniformLocation(Handle, name), data);
         }
         
         public void SetFloat(string name, float data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform1(_uniformLocations[name], data);
+            GL.Uniform1(GL.GetUniformLocation(Handle, name), data);
         }
         
         public void SetMatrix4(string name, Matrix4 data)
         {
             GL.UseProgram(Handle);
-            GL.UniformMatrix4(_uniformLocations[name], true, ref data);
+            GL.UniformMatrix4(GL.GetUniformLocation(Handle, name), true, ref data);
         }
         
         public void SetVector3(string name, Vector3 data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform3(_uniformLocations[name], data);
+            GL.Uniform3(GL.GetUniformLocation(Handle, name), data);
         }
 
         public abstract void Dispose();

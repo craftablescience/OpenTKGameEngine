@@ -15,9 +15,9 @@ namespace OpenTKGameEngine.Render
             Handle = glHandle;
         }
 
-        public static Texture LoadFromFile(string path, bool generateMipmaps) => new (CreateTexture(Image.Load<Rgba32>(path), generateMipmaps));
+        public static Texture LoadFromFile(string path, bool generateMipmaps = true) => new (CreateTexture(Image.Load<Rgba32>(path), generateMipmaps));
 
-        public static Texture LoadFromImage(Image<Rgba32> image, bool generateMipmaps) => new(CreateTexture(image, generateMipmaps));
+        public static Texture LoadFromImage(Image<Rgba32> image, bool generateMipmaps = true) => new(CreateTexture(image, generateMipmaps));
 
         private static int CreateTexture(Image<Rgba32> image, bool generateMipmaps)
         {
@@ -36,7 +36,7 @@ namespace OpenTKGameEngine.Render
                     pixels.Add(row[x].A);
                 }
             }
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, pixels.ToArray());
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
             if (generateMipmaps)
             {
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
