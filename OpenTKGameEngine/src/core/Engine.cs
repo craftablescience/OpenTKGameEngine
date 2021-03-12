@@ -5,6 +5,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTKGameEngine.Render;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Image = SixLabors.ImageSharp.Image;
@@ -13,6 +14,10 @@ namespace OpenTKGameEngine.Core  {
 	public class Engine : GameWindow
 	{
 		public Color4 ClearColor { get; set; } = Color4.Black;
+		public Camera Camera;
+		public double ElapsedTime { get; private set; }
+		private bool _firstMove = true;
+		private Vector2 _lastPos;
 
 		public Engine(string[] args, string title = "GameWindow", Vector2i? size = null, string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
@@ -51,6 +56,9 @@ namespace OpenTKGameEngine.Core  {
 		protected override void OnLoad()
 		{
 			GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
+			GL.Enable(EnableCap.DepthTest);
+			Camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+			CursorGrabbed = true;
 			Load();
 			base.OnLoad();
 		}
@@ -60,33 +68,98 @@ namespace OpenTKGameEngine.Core  {
 			// overwrite in inherited classes
 		}
 
-		protected override void OnRenderFrame(FrameEventArgs evt)
+		protected override void OnRenderFrame(FrameEventArgs e)
 		{
-			GL.Clear(ClearBufferMask.ColorBufferBit);
-			// ---
-			
-			KeyboardState input = KeyboardState;
-
-			if (input.IsKeyDown(Keys.Escape))
-			{
-				DestroyWindow();
-			}
-			
+			ElapsedTime += 1.0 * e.Time;
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			Render();
-			// ---
 			Context.SwapBuffers();
-			base.OnUpdateFrame(evt);
+			base.OnUpdateFrame(e);
 		}
 		
 		public virtual void Render()
 		{
 			// overwrite in inherited classes
 		}
-		
+
+		protected override void OnUpdateFrame(FrameEventArgs e)
+		{
+			if (!IsFocused) return;
+			if (KeyboardState.IsKeyDown(Keys.Escape))
+			{
+				DestroyWindow();
+			}
+			const float cameraSpeed = 1.5f;
+			const float sensitivity = 0.2f;
+			var input = KeyboardState;
+			
+			if (input.IsKeyDown(Keys.W))
+			{
+				Camera.Position += Camera.Front * cameraSpeed * (float)e.Time; // Forward
+			}
+
+			if (input.IsKeyDown(Keys.S))
+			{
+				Camera.Position -= Camera.Front * cameraSpeed * (float)e.Time; // Backwards
+			}
+			if (input.IsKeyDown(Keys.A))
+			{
+				Camera.Position -= Camera.Right * cameraSpeed * (float)e.Time; // Left
+			}
+			if (input.IsKeyDown(Keys.D))
+			{
+				Camera.Position += Camera.Right * cameraSpeed * (float)e.Time; // Right
+			}
+			if (input.IsKeyDown(Keys.Space))
+			{
+				Camera.Position += Camera.Up * cameraSpeed * (float)e.Time; // Up
+			}
+			if (input.IsKeyDown(Keys.LeftShift))
+			{
+				Camera.Position -= Camera.Up * cameraSpeed * (float)e.Time; // Down
+			}
+			
+			var mouse = MouseState;
+
+			if (_firstMove)
+			{
+				_lastPos = new Vector2(mouse.X, mouse.Y);
+				_firstMove = false;
+			}
+			else
+			{
+				float deltaX = mouse.X - _lastPos.X;
+				float deltaY = mouse.Y - _lastPos.Y;
+				_lastPos = new Vector2(mouse.X, mouse.Y);
+				Camera.Yaw += deltaX * sensitivity;
+				Camera.Pitch -= deltaY * sensitivity;
+			}
+
+			Update();
+			base.OnUpdateFrame(e);
+		}
+
+		public virtual void Update()
+		{
+			// overwrite in inherited classes
+		}
+
 		protected override void OnResize(ResizeEventArgs e)
 		{
-			GL.Viewport(0, 0, Size.X, Size.Y);
+			ResetView();
 			base.OnResize(e);
+		}
+
+		private void ResetView()
+		{
+			GL.Viewport(0, 0, Size.X, Size.Y);
+			Camera.AspectRatio = Size.X / (float) Size.Y;
+		}
+
+		protected override void OnMouseWheel(MouseWheelEventArgs e)
+		{
+			Camera.Fov -= e.OffsetY;
+			base.OnMouseWheel(e);
 		}
 
 		protected override void OnUnload()
