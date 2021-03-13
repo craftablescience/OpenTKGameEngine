@@ -56,7 +56,7 @@ namespace Demo
 		private Shader _triangleShader;
 		private Texture _crate;
 
-		public DemoCube(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Cube", new Vector2i(1600, 900))
+		public DemoCube(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Cube", new Vector2i(1600, 900), "Assets/Textures/splash.png")
 		{
 		}
 

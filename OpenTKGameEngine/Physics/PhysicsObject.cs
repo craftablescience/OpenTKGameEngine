@@ -1,7 +1,6 @@
 using BulletSharp;
 using OpenTK.Mathematics;
 using OpenTKGameEngine.Render;
-using OpenTKGameEngine.Utility;
 
 namespace OpenTKGameEngine.Physics
 {

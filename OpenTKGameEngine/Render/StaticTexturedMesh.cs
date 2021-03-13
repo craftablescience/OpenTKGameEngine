@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BulletSharp.Math;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTKGameEngine.Core;
@@ -26,18 +25,21 @@ namespace OpenTKGameEngine.Render
         public uint[] IndexArrayCache { get; private set; } = Array.Empty<uint>();
         private uint _currentIndex;
         public bool Finalized;
+        private bool _is2d;
 
         public StaticTexturedMesh(string texturePath) : this(texturePath, SetDefaultShader(), "position", "textureCoords")
         {
         }
 
-        public StaticTexturedMesh(string texturePath, Shader shader, string uniformPosition, string uniformTextureCoords)
+        public StaticTexturedMesh(string texturePath, Shader shader, string uniformPosition, string uniformTextureCoords, bool is2d = false)
         {
+            _is2d = is2d;
             _texturePath = texturePath;
             _uniformPosition = uniformPosition;
             _uniformTextureCoords = uniformTextureCoords;
             Shader = shader;
-            World.Register3DShader(Shader);
+            if (!is2d)
+                World.Register3DShader(Shader);
             Finalized = false;
         }
 
@@ -145,7 +147,7 @@ namespace OpenTKGameEngine.Render
             }
         }
 
-        public void CalculateVertexAndIndexArrays()
+        public void BakeMesh()
         {
             if (Finalized) throw new FieldAccessException("StaticTexturedMesh is finalized! Do not calculate vertex arrays again");
             VertexArrayCache = new float[_vertices.Count * 5];
@@ -184,7 +186,15 @@ namespace OpenTKGameEngine.Render
         {
             GL.BindVertexArray(_vertexArrayId);
             Texture.Use(TextureUnit.Texture0);
-            Shader.SetMatrix4("model", Matrix4.Identity * position);
+            if (!_is2d)
+                Shader.SetMatrix4("model", Matrix4.Identity * position);
+            else
+            {
+                Shader.SetMatrix4("model", Matrix4.Identity);
+                Shader.SetMatrix4("view", Matrix4.Identity);
+                Shader.SetMatrix4("projection", Matrix4.Identity);
+            }
+
             Shader.Use();
             GL.DrawElements(PrimitiveType.Triangles, IndexArrayCache.Length, DrawElementsType.UnsignedInt, 0);
         }
@@ -233,7 +243,7 @@ namespace OpenTKGameEngine.Render
             mesh.AddVertex(new TextureVertex(size/2f,  size/2f,  size/2f,  1.0f, 0.0f));
             mesh.AddVertex(new TextureVertex(-size/2f,  size/2f,  size/2f,  0.0f, 0.0f));
             mesh.AddVertex(new TextureVertex(-size/2f,  size/2f, -size/2f,  0.0f, 1.0f));
-            mesh.CalculateVertexAndIndexArrays();
+            mesh.BakeMesh();
             return mesh;
         }
     }

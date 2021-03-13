@@ -6,7 +6,7 @@ namespace Demo
 {
     internal class DemoObjLoader : Engine
     {
-        public DemoObjLoader(string[] args) : base(args, "Binaries/fmod.dll", "Demo - OBJ Loader", new Vector2i(1600, 900))
+        public DemoObjLoader(string[] args) : base(args, "Binaries/fmod.dll", "Demo - OBJ Loader", new Vector2i(1600, 900), "Assets/Textures/splash.png")
         {
         }
 
@@ -15,7 +15,7 @@ namespace Demo
             Camera.Position = new Vector3(0, 0, -10);
             var mesh = new StaticTexturedMesh("Assets/Textures/container.png");
             mesh.LoadObj("Assets/Models/demo.obj");
-            mesh.CalculateVertexAndIndexArrays();
+            mesh.BakeMesh();
             World.AddMesh(mesh, new Vector3(0,0,0));
         }
     }

@@ -5,7 +5,7 @@ namespace Demo
 {
     internal class DemoPhysics : Engine
     {
-        public DemoPhysics(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Physics", new Vector2i(1600, 900))
+        public DemoPhysics(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Physics", new Vector2i(1600, 900), "Assets/Textures/splash.png")
         {
         }
 

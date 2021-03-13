@@ -3,12 +3,14 @@ using BulletSharp;
 using OpenTK.Mathematics;
 using OpenTKGameEngine.Physics;
 using OpenTKGameEngine.Render;
+using OpenTKGameEngine.Sound;
 
 namespace OpenTKGameEngine.Core
 {
     public class World
     {
-        public PhysicsController PhysicsController;
+        public PhysicsController PhysicsController { get; protected set; }
+        public SoundController SoundController { get; protected set; }
         private readonly List<PhysicsObject> _physicsObjects = new();
         private readonly Dictionary<StaticTexturedMesh,Vector3> _staticTexturedMeshes = new();
         private static readonly List<Shader> Shaders = new();
@@ -33,9 +35,10 @@ namespace OpenTKGameEngine.Core
             Shaders.Add(shader);
         }
 
-        public void Load()
+        public void Load(string fmodPath)
         {
             PhysicsController = new PhysicsController();
+            SoundController = new SoundController(fmodPath, 1f, 1f, 1f);
         }
 
         public void Update(double time)

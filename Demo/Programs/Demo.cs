@@ -9,12 +9,12 @@ namespace Demo {
 	{
 		private static void Main(string[] args)
 		{
-			string[] acceptableInput = {"0", "1", "2", "3", "4"};
-				System.Console.WriteLine("Color Plane (0) | Texture Plane (1) | Cube (2) | Cube Physics (3) | OBJ Loader (4)");
+			string[] acceptableInput = {"0", "1", "2", "3", "4", "5"};
+				System.Console.WriteLine("Color Plane (0)\nTexture Plane (1)\nCube (2)\nCube Physics (3)\nOBJ Loader (4)\n2D Sound (5)");
 			string i;
 			while (!acceptableInput.Contains(i = System.Console.In.ReadLine()))
 			{
-				System.Console.WriteLine("0, 1, 2, 3, or 4 please.");
+				System.Console.WriteLine("0, 1, 2, 3, 4, or 5 please.");
 			}
 			switch (i)
 			{
@@ -45,6 +45,12 @@ namespace Demo {
 				case "4":
 				{
 					var engine = new DemoObjLoader(args);
+					engine.Run();
+					return;
+				}
+				case "5":
+				{
+					var engine = new Demo2DSound(args);
 					engine.Run();
 					return;
 				}

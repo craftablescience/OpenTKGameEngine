@@ -23,6 +23,14 @@
       <Content Include="Assets\Shaders\textured_mesh.vert">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Assets\Splashes\engine.png" />
+      <Content Include="Assets\Splashes\engine.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Assets\Splashes\fmod.png" />
+      <Content Include="Assets\Splashes\fmod.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

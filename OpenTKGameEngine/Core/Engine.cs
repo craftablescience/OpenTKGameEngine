@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using FmodAudio;
+﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -7,7 +7,6 @@ using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Render;
-using OpenTKGameEngine.Utility;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Image = SixLabors.ImageSharp.Image;
@@ -17,16 +16,19 @@ namespace OpenTKGameEngine.Core  {
 	{
 		public Color4 ClearColor { get; set; } = Color4.Black;
 		public static Camera Camera { get; private set; }
-		public World World;
-		public FmodSystem SoundSystem { get; private set; }
 		private string _fmodPath;
+		public World World;
 		public double ElapsedTime { get; private set; }
 		private bool _firstMove = true;
 		private Vector2 _lastPos;
+		private SplashScreen _splashScreen;
+		private SplashScreenPhase _splashScreenPhase = SplashScreenPhase.EngineLogo;
+		private string _splashPath;
 
-		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
+		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "Assets/icon.png", string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
 			_fmodPath = fmodPath;
+			_splashPath = splashPath;
 		}
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
@@ -64,19 +66,8 @@ namespace OpenTKGameEngine.Core  {
 		{
 			GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 			GL.Enable(EnableCap.DepthTest);
-			Camera = new Camera(Vector3.UnitZ, Size.X / (float)Size.Y);
-			CursorGrabbed = true;
-			World = new World();
-			World.Load();
-			LoadSoundSystem();
-			Load();
+			_splashScreen = new SplashScreen("Assets/Splashes/engine.png", "Assets/Splashes/fmod.png", _splashPath);
 			base.OnLoad();
-		}
-
-		public void LoadSoundSystem()
-		{
-			Fmod.SetLibraryLocation(_fmodPath);
-			SoundSystem = Fmod.CreateSystem();
 		}
 
 		public new virtual void Load()
@@ -88,8 +79,25 @@ namespace OpenTKGameEngine.Core  {
 		{
 			ElapsedTime += e.Time;
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			World.Render(e.Time);
-			Render();
+			switch (_splashScreenPhase)
+			{
+				case SplashScreenPhase.EngineLogo:
+				case SplashScreenPhase.FMOD:
+				case SplashScreenPhase.GameLogo:
+				case SplashScreenPhase.LoadAssets:
+				{
+					_splashScreen.Render(e.Time, _splashScreenPhase);
+					break;
+				}
+				case SplashScreenPhase.LoadComplete:
+				{
+					World.Render(e.Time);
+					Render();
+					break;
+				}
+				default:
+					throw new ArgumentOutOfRangeException(nameof(e), "Invalid splashscreen phase");
+			}
 			Context.SwapBuffers();
 			base.OnUpdateFrame(e);
 		}
@@ -101,58 +109,101 @@ namespace OpenTKGameEngine.Core  {
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
-			if (!IsFocused) return;
-			if (KeyboardState.IsKeyDown(Keys.Escape))
+			if (_splashScreenPhase == SplashScreenPhase.LoadComplete)
 			{
-				DestroyWindow();
-			}
-			const float cameraSpeed = 1.5f;
-			const float sensitivity = 0.2f;
-			var input = KeyboardState;
-			
-			if (input.IsKeyDown(Keys.W))
-			{
-				Camera.Position += Camera.Front * cameraSpeed * (float)e.Time; // Forward
-			}
+				if (!IsFocused) return;
+				if (KeyboardState.IsKeyDown(Keys.Escape))
+				{
+					DestroyWindow();
+				}
 
-			if (input.IsKeyDown(Keys.S))
-			{
-				Camera.Position -= Camera.Front * cameraSpeed * (float)e.Time; // Backwards
-			}
-			if (input.IsKeyDown(Keys.A))
-			{
-				Camera.Position -= Camera.Right * cameraSpeed * (float)e.Time; // Left
-			}
-			if (input.IsKeyDown(Keys.D))
-			{
-				Camera.Position += Camera.Right * cameraSpeed * (float)e.Time; // Right
-			}
-			if (input.IsKeyDown(Keys.Space))
-			{
-				Camera.Position += Camera.Up * cameraSpeed * (float)e.Time; // Up
-			}
-			if (input.IsKeyDown(Keys.LeftShift))
-			{
-				Camera.Position -= Camera.Up * cameraSpeed * (float)e.Time; // Down
-			}
-			
-			var mouse = MouseState;
+				const float cameraSpeed = 1.5f;
+				const float sensitivity = 0.2f;
+				var input = KeyboardState;
 
-			if (_firstMove)
-			{
-				_lastPos = new Vector2(mouse.X, mouse.Y);
-				_firstMove = false;
+				if (input.IsKeyDown(Keys.W))
+				{
+					Camera.Position += Camera.Front * cameraSpeed * (float) e.Time; // Forward
+				}
+
+				if (input.IsKeyDown(Keys.S))
+				{
+					Camera.Position -= Camera.Front * cameraSpeed * (float) e.Time; // Backwards
+				}
+
+				if (input.IsKeyDown(Keys.A))
+				{
+					Camera.Position -= Camera.Right * cameraSpeed * (float) e.Time; // Left
+				}
+
+				if (input.IsKeyDown(Keys.D))
+				{
+					Camera.Position += Camera.Right * cameraSpeed * (float) e.Time; // Right
+				}
+
+				if (input.IsKeyDown(Keys.Space))
+				{
+					Camera.Position += Camera.Up * cameraSpeed * (float) e.Time; // Up
+				}
+
+				if (input.IsKeyDown(Keys.LeftShift))
+				{
+					Camera.Position -= Camera.Up * cameraSpeed * (float) e.Time; // Down
+				}
+
+				var mouse = MouseState;
+
+				if (_firstMove)
+				{
+					_lastPos = new Vector2(mouse.X, mouse.Y);
+					_firstMove = false;
+				}
+				else
+				{
+					float deltaX = mouse.X - _lastPos.X;
+					float deltaY = mouse.Y - _lastPos.Y;
+					_lastPos = new Vector2(mouse.X, mouse.Y);
+					Camera.Yaw += deltaX * sensitivity;
+					Camera.Pitch -= deltaY * sensitivity;
+				}
+
+				World.Update(e.Time);
+				Update();
 			}
 			else
 			{
-				float deltaX = mouse.X - _lastPos.X;
-				float deltaY = mouse.Y - _lastPos.Y;
-				_lastPos = new Vector2(mouse.X, mouse.Y);
-				Camera.Yaw += deltaX * sensitivity;
-				Camera.Pitch -= deltaY * sensitivity;
+				_splashScreenPhase = ElapsedTime switch
+				{
+					< 3 => SplashScreenPhase.EngineLogo,
+					< 6 => SplashScreenPhase.FMOD,
+					< 9 => SplashScreenPhase.GameLogo,
+					_ => SplashScreenPhase.LoadAssets
+				};
+				switch (_splashScreenPhase)
+				{
+					case SplashScreenPhase.EngineLogo:
+					case SplashScreenPhase.FMOD:
+					case SplashScreenPhase.GameLogo:
+					{
+						_splashScreen.Render(e.Time, _splashScreenPhase);
+						break;
+					}
+					case SplashScreenPhase.LoadAssets:
+					{
+						Camera = new Camera(Vector3.UnitZ, Size.X / (float) Size.Y);
+						CursorGrabbed = true;
+						World = new World();
+						World.Load(_fmodPath);
+						Load();
+						ResetView();
+						_splashScreenPhase = SplashScreenPhase.LoadComplete;
+						break;
+					}
+					case SplashScreenPhase.LoadComplete:
+					default:
+						throw new ArgumentOutOfRangeException(nameof(e), "Invalid splashscreen phase");
+				}
 			}
-			World.Update(e.Time);
-			Update();
 			base.OnUpdateFrame(e);
 		}
 
@@ -170,7 +221,8 @@ namespace OpenTKGameEngine.Core  {
 		private void ResetView()
 		{
 			GL.Viewport(0, 0, Size.X, Size.Y);
-			Camera.AspectRatio = Size.X / (float) Size.Y;
+			if (Camera != null)
+				Camera.AspectRatio = Size.X / (float) Size.Y;
 		}
 
 		protected override void OnMouseWheel(MouseWheelEventArgs e)

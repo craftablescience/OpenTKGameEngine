@@ -25,7 +25,7 @@ namespace Demo
 		private int _vertexArrayId;
 		private Shader _triangleShader;
 		
-		public DemoColor(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Colored", new Vector2i(1600, 900))
+		public DemoColor(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Colored", new Vector2i(1600, 900), "Assets/Textures/splash.png")
 		{
 		}
 

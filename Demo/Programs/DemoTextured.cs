@@ -26,7 +26,7 @@ namespace Demo
 		private Shader _triangleShader;
 		private Texture _crate;
 
-		public DemoTextured(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Textured", new Vector2i(1600, 900))
+		public DemoTextured(string[] args) : base(args, "Binaries/fmod.dll", "Demo - Textured", new Vector2i(1600, 900), "Assets/Textures/splash.png")
 		{
 		}
 
