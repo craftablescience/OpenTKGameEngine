@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-namespace OpenTKGameEngine.Render.Shader
+namespace OpenTKGameEngine.Render
 {
     public abstract class Shader : IDisposable
     {
@@ -20,13 +19,15 @@ namespace OpenTKGameEngine.Render.Shader
         {
             GL.UseProgram(Handle);
         }
+
+        public abstract void Reload();
         
         public int GetAttribLocation(string attribName)
         {
             return GL.GetAttribLocation(Handle, attribName);
         }
         
-        private static void LinkProgram(int program)
+        protected static void LinkProgram(int program)
         {
             GL.LinkProgram(program);
             GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int code);

@@ -6,6 +6,7 @@ using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Render;
+using OpenTKGameEngine.Utility;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Image = SixLabors.ImageSharp.Image;
@@ -15,6 +16,7 @@ namespace OpenTKGameEngine.Core  {
 	{
 		public Color4 ClearColor { get; set; } = Color4.Black;
 		public Camera Camera;
+		public World World;
 		public double ElapsedTime { get; private set; }
 		private bool _firstMove = true;
 		private Vector2 _lastPos;
@@ -30,7 +32,8 @@ namespace OpenTKGameEngine.Core  {
 			{
 				Title = title,
 				WindowBorder = WindowBorder.Fixed,
-				Icon = LoadIconFromImage(Image.Load<Rgba32>(iconPath))
+				Icon = LoadIconFromImage(Image.Load<Rgba32>(iconPath)),
+				StartFocused = true
 			};
 			if (size.HasValue)
 				settings.Size = size.Value;
@@ -57,8 +60,10 @@ namespace OpenTKGameEngine.Core  {
 		{
 			GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 			GL.Enable(EnableCap.DepthTest);
-			Camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+			Camera = new Camera(Vector3.UnitZ, Size.X / (float)Size.Y);
 			CursorGrabbed = true;
+			World = new World();
+			World.Load();
 			Load();
 			base.OnLoad();
 		}
@@ -70,8 +75,9 @@ namespace OpenTKGameEngine.Core  {
 
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
-			ElapsedTime += 1.0 * e.Time;
+			ElapsedTime += e.Time;
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			World.Render(e.Time);
 			Render();
 			Context.SwapBuffers();
 			base.OnUpdateFrame(e);
@@ -134,7 +140,7 @@ namespace OpenTKGameEngine.Core  {
 				Camera.Yaw += deltaX * sensitivity;
 				Camera.Pitch -= deltaY * sensitivity;
 			}
-
+			World.Update(e.Time);
 			Update();
 			base.OnUpdateFrame(e);
 		}
@@ -164,6 +170,7 @@ namespace OpenTKGameEngine.Core  {
 
 		protected override void OnUnload()
 		{
+			World.Unload();
 			UnLoad();
 			base.OnUnload();
 		}

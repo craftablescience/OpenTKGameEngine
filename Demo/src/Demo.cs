@@ -3,10 +3,9 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTKGameEngine.Core;
 using OpenTKGameEngine.Render;
-using OpenTKGameEngine.Render.Shader;
 
 namespace Demo {
-	class Demo
+	internal static class Demo
 	{
 		private static void Main(string[] args)
 		{
@@ -17,34 +16,42 @@ namespace Demo {
 			{
 				System.Console.WriteLine("0, 1, or 2 please.");
 			}
-			if (i.Equals("0"))
+			switch (i)
 			{
-				var engine = new DemoColor(args);
-				engine.Run();
-			}
-			else if (i.Equals("1"))
-			{
-				var engine = new DemoTextured(args);
-				engine.Run();
-			}
-			else if (i.Equals("2"))
-			{
-				var engine = new DemoCube(args);
-				engine.Run();
+				case "0":
+				{
+					var engine = new DemoColor(args);
+					engine.Run();
+					break;
+				}
+				case "1":
+				{
+					var engine = new DemoTextured(args);
+					engine.Run();
+					break;
+				}
+				case "2":
+				{
+					var engine = new DemoCube(args);
+					engine.Run();
+					break;
+				}
 			}
 		}
 	}
 	
 	internal class DemoColor : Engine
 	{
-		private readonly float[] _vertices = {
+		private readonly float[] _vertices =
+		{
 			// positions        // colors
 			1.0f, -1.0f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
 			-1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
 			-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  // top left
 			1.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  // top right
 		};
-		private readonly uint[] _indices = {
+		private readonly uint[] _indices =
+		{
 			0, 1, 3,   // first triangle
 			1, 2, 3    // second triangle
 		};
@@ -90,14 +97,16 @@ namespace Demo {
 	
 	internal class DemoTextured : Engine
 	{
-		private readonly float[] _vertices = {
+		private readonly float[] _vertices =
+		{
 			// positions        // uvs
 			1.0f, -1.0f, 0.0f,  1.0f, 0.0f,  // bottom right
 			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // bottom left
 			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  // top left
 			1.0f,  1.0f, 0.0f,  1.0f, 1.0f,  // top right
 		};
-		private readonly uint[] _indices = {
+		private readonly uint[] _indices =
+		{
 			0, 1, 3,   // first triangle
 			1, 2, 3    // second triangle
 		};
@@ -147,19 +156,51 @@ namespace Demo {
 	
 	internal class DemoCube : Engine
 	{
-		private readonly float[] _vertices = {
-			// positions        // uvs
-			1.0f, -1.0f, 0.0f,  1.0f, 0.0f,  // bottom right
-			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // bottom left
-			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  // top left
-			1.0f,  1.0f, 0.0f,  1.0f, 1.0f,  // top right
-		};
-		private readonly uint[] _indices = {
-			0, 1, 3,   // first triangle
-			1, 2, 3    // second triangle
+		private readonly float[] _vertices =
+		{
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+			0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
 		private int _vertexBufferId;
-		private int _elementBufferId;
 		private int _vertexArrayId;
 		private Shader _triangleShader;
 		private Texture _crate;
@@ -175,10 +216,7 @@ namespace Demo {
 			GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 			_vertexArrayId = GL.GenVertexArray();
 			GL.BindVertexArray(_vertexArrayId);
-			_elementBufferId = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferId);
-			GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
-			_crate = Texture.LoadFromFile("Assets/Textures/container.png", false);
+			_crate = Texture.LoadFromFile("Assets/Textures/container.png");
 			_triangleShader = new UnlitShader("Assets/Shaders/democube.vert", "Assets/Shaders/democube.frag");
 			_triangleShader.SetInt("texture0", 0);
 			_triangleShader.Use();
@@ -193,11 +231,11 @@ namespace Demo {
 			GL.BindVertexArray(_vertexArrayId);
 			_crate.Use(TextureUnit.Texture0);
 			_triangleShader.Use();
-			var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(ElapsedTime * 16));
+			var model = Matrix4.Identity * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians(ElapsedTime * 16));
 			_triangleShader.SetMatrix4("model", model);
 			_triangleShader.SetMatrix4("view", Camera.GetViewMatrix());
 			_triangleShader.SetMatrix4("projection", Camera.GetProjectionMatrix());
-			GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+			GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 		}
 
 		public override void UnLoad()

@@ -40,7 +40,7 @@ namespace OpenTKGameEngine.Render
             get => MathHelper.RadiansToDegrees(_fov);
             set
             {
-                float angle = MathHelper.Clamp(value, 1f, 45f);
+                float angle = MathHelper.Clamp(value, 1f, 90f);
                 _fov = MathHelper.DegreesToRadians(angle);
             }
         }
