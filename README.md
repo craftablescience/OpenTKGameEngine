@@ -1,0 +1,1 @@
+**NOTE: The Demo example classes will not run until you place the FMOD DLL into `Demo/Binaries/fmod.dll`. For more information read `OpenTKGameEngine/Binaries/README.md`.**
