@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FmodAudio;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -17,12 +18,26 @@ namespace OpenTKGameEngine.Core  {
 		public Color4 ClearColor { get; set; } = Color4.Black;
 		public static Camera Camera { get; private set; }
 		public World World;
+		private FmodSystem _soundSystem;
+
+		public FmodSystem SoundSystem
+		{
+			get => _soundSystem;
+			private set
+			{
+				Fmod.SetLibraryLocation(_fmodPath);
+				_soundSystem = value;
+			}
+		}
+
+		private string _fmodPath = "Binaries/fmod.dll";
 		public double ElapsedTime { get; private set; }
 		private bool _firstMove = true;
 		private Vector2 _lastPos;
 
-		public Engine(string[] args, string title = "GameWindow", Vector2i? size = null, string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
+		public Engine(string[] args, string title = "GameWindow", Vector2i? size = null, string iconPath = null, string fmodPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
+			_fmodPath ??= fmodPath;
 		}
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
@@ -64,6 +79,7 @@ namespace OpenTKGameEngine.Core  {
 			CursorGrabbed = true;
 			World = new World();
 			World.Load();
+			SoundSystem = Fmod.CreateSystem();
 			Load();
 			base.OnLoad();
 		}

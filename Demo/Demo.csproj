@@ -18,7 +18,7 @@
 
     <ItemGroup>
       <PackageReference Include="BulletSharp" Version="0.11.1" />
-      <PackageReference Include="CSCore" Version="1.2.1.2" />
+      <PackageReference Include="FmodAudio" Version="2.0.1" />
       <PackageReference Include="OpenTK" Version="4.5.0" />
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
     </ItemGroup>
