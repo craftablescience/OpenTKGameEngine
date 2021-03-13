@@ -23,10 +23,6 @@
       <Content Include="Assets\Shaders\textured_mesh.vert">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="Binaries\fmod.dll" />
-      <Content Include="Binaries\fmod.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

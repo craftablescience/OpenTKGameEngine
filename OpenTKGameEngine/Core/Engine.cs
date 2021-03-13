@@ -18,26 +18,15 @@ namespace OpenTKGameEngine.Core  {
 		public Color4 ClearColor { get; set; } = Color4.Black;
 		public static Camera Camera { get; private set; }
 		public World World;
-		private FmodSystem _soundSystem;
-
-		public FmodSystem SoundSystem
-		{
-			get => _soundSystem;
-			private set
-			{
-				Fmod.SetLibraryLocation(_fmodPath);
-				_soundSystem = value;
-			}
-		}
-
-		private string _fmodPath = "Binaries/fmod.dll";
+		public FmodSystem SoundSystem { get; private set; }
+		private string _fmodPath;
 		public double ElapsedTime { get; private set; }
 		private bool _firstMove = true;
 		private Vector2 _lastPos;
 
-		public Engine(string[] args, string title = "GameWindow", Vector2i? size = null, string iconPath = null, string fmodPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
+		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
-			_fmodPath ??= fmodPath;
+			_fmodPath = fmodPath;
 		}
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
@@ -79,9 +68,15 @@ namespace OpenTKGameEngine.Core  {
 			CursorGrabbed = true;
 			World = new World();
 			World.Load();
-			SoundSystem = Fmod.CreateSystem();
+			LoadSoundSystem();
 			Load();
 			base.OnLoad();
+		}
+
+		public void LoadSoundSystem()
+		{
+			Fmod.SetLibraryLocation(_fmodPath);
+			SoundSystem = Fmod.CreateSystem();
 		}
 
 		public new virtual void Load()

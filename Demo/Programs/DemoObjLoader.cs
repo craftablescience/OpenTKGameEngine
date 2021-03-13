@@ -6,7 +6,7 @@ namespace Demo
 {
     internal class DemoObjLoader : Engine
     {
-        public DemoObjLoader(string[] args) : base(args, "Demo - OBJ Loader", new Vector2i(1600, 900))
+        public DemoObjLoader(string[] args) : base(args, "Binaries/fmod.dll", "Demo - OBJ Loader", new Vector2i(1600, 900))
         {
         }
 
