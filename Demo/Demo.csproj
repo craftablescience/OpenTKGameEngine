@@ -52,6 +52,15 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Resources\icon.png" />
+      <None Remove="Assets\Models\text.obj" />
+      <None Remove="Assets\Models\demo.mtl" />
+      <Content Include="Assets\Models\demo.mtl">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Assets\Models\demo.obj" />
+      <Content Include="Assets\Models\demo.obj">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

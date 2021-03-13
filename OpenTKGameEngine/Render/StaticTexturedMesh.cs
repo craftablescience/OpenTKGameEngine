@@ -78,8 +78,76 @@ namespace OpenTKGameEngine.Render
             AddTriangle(vertex1, vertex2, vertex3);
         }
 
+        /// <summary>
+        /// Loads an OBJ file into the mesh.
+        /// The OBJ must be composed of triangular faces.
+        /// Material files are currently not imported.
+        /// </summary>
+        /// <param name="objPath">The path to the OBJ file to load.</param>
+        public void LoadObj(string objPath)
+        {
+            string[] lines = System.IO.File.ReadAllLines(objPath);
+            List<Vector3> vertexBuffer = new();
+            List<Vector2> uvBuffer = new();
+            //List<Vector3> normalBuffer = new();
+            List<Vector2i> faces = new();
+            foreach (string line in lines)
+            {
+                string unparsed = line.Trim();
+                if (unparsed.StartsWith("v "))
+                {
+                    // vertex
+                    float x = float.Parse(unparsed.Split(" ")[1]);
+                    float y = float.Parse(unparsed.Split(" ")[2]);
+                    float z = float.Parse(unparsed.Split(" ")[3]);
+                    vertexBuffer.Add(new Vector3(x, y, z));
+                }
+                else if (unparsed.StartsWith("vt "))
+                {
+                    // uv
+                    float u = float.Parse(unparsed.Split(" ")[1]);
+                    float v = float.Parse(unparsed.Split(" ")[2]);
+                    uvBuffer.Add(new Vector2(u, v));
+                }
+                //else if (unparsed.StartsWith("vn "))
+                //{
+                    // normal
+                    //float n0 = float.Parse(unparsed.Split(" ")[1]);
+                    //float n1 = float.Parse(unparsed.Split(" ")[2]);
+                    //float n2 = float.Parse(unparsed.Split(" ")[3]);
+                    //normalBuffer.Add(new Vector3(n0, n1, n2));
+                //}
+                else if (unparsed.StartsWith("f "))
+                {
+                    // face
+                    string[] split = unparsed.Split(" ");
+                    if (split.Length > 4)
+                        throw new FormatException("OBJ model must be triangulated!");
+                    int v0 = int.Parse(split[1].Split("/")[0]);
+                    int vt0 = int.Parse(split[1].Split("/")[1]);
+                    //int vn0 = int.Parse(split[1].Split("/")[2]);
+                    int v1 = int.Parse(split[2].Split("/")[0]);
+                    int vt1 = int.Parse(split[2].Split("/")[1]);
+                    //int vn1 = int.Parse(split[2].Split("/")[2]);
+                    int v2 = int.Parse(split[3].Split("/")[0]);
+                    int vt2 = int.Parse(split[3].Split("/")[1]);
+                    //int vn2 = int.Parse(split[3].Split("/")[2]);
+                    faces.Add(new Vector2i(v0, vt0));
+                    faces.Add(new Vector2i(v1, vt1));
+                    faces.Add(new Vector2i(v2, vt2));
+                }
+            }
+            for (var i = 0; i < faces.Count; i++)
+            {
+                (float x, float y, float z) = vertexBuffer[faces[i].X - 1];
+                (float u, float v) = uvBuffer[faces[i].Y - 1];
+                AddVertex(new TextureVertex(x, y, z, u, v));
+            }
+        }
+
         public void CalculateVertexAndIndexArrays()
         {
+            if (Finalized) throw new FieldAccessException("StaticTexturedMesh is finalized! Do not calculate vertex arrays again");
             VertexArrayCache = new float[_vertices.Count * 5];
             for (var i = 0; i < _vertices.Count; i++)
             {

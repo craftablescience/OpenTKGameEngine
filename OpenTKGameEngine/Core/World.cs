@@ -10,6 +10,7 @@ namespace OpenTKGameEngine.Core
     {
         public PhysicsController PhysicsController;
         private readonly List<PhysicsObject> _physicsObjects = new();
+        private readonly Dictionary<StaticTexturedMesh,Vector3> _staticTexturedMeshes = new();
         private static readonly List<Shader> Shaders = new();
 
         public void AddCube(float size, bool dynamic, Vector3 position)
@@ -20,6 +21,11 @@ namespace OpenTKGameEngine.Core
                 position,
                 new BoxShape(size / 2f),
                 PhysicsController));
+        }
+
+        public void AddMesh(StaticTexturedMesh mesh, Vector3 position)
+        {
+            _staticTexturedMeshes.Add(mesh, position);
         }
 
         public static void Register3DShader(Shader shader)
@@ -43,6 +49,10 @@ namespace OpenTKGameEngine.Core
             {
                 shader.SetMatrix4("view", Engine.Camera.GetViewMatrix());
                 shader.SetMatrix4("projection", Engine.Camera.GetProjectionMatrix());
+            }
+            foreach (var mesh in _staticTexturedMeshes.Keys)
+            {
+                mesh.Render(time, Matrix4.CreateTranslation(_staticTexturedMeshes[mesh]));
             }
             foreach (var physicsObject in _physicsObjects)
             {
