@@ -10,7 +10,7 @@ namespace OpenTKGameEngine.Core
     {
         public PhysicsController PhysicsController;
         private readonly List<PhysicsObject> _physicsObjects = new();
-        private static readonly List<Shader> _shaders = new();
+        private static readonly List<Shader> Shaders = new();
 
         public void AddCube(float size, bool dynamic, Vector3 position)
         {
@@ -24,7 +24,7 @@ namespace OpenTKGameEngine.Core
 
         public static void Register3DShader(Shader shader)
         {
-            _shaders.Add(shader);
+            Shaders.Add(shader);
         }
 
         public void Load()
@@ -39,7 +39,7 @@ namespace OpenTKGameEngine.Core
 
         public void Render(double time)
         {
-            foreach (var shader in _shaders)
+            foreach (var shader in Shaders)
             {
                 shader.SetMatrix4("view", Engine.Camera.GetViewMatrix());
                 shader.SetMatrix4("projection", Engine.Camera.GetProjectionMatrix());
