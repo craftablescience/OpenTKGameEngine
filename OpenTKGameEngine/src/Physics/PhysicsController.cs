@@ -70,7 +70,16 @@ namespace OpenTKGameEngine.Physics
             return body;
         }
 
-        private static Matrix OpenTkMatrixToBulletMatrix(Matrix4 startTransform)
+        public static Matrix OpenTkMatrixToBulletMatrix(Matrix4 startTransform)
+        {
+            return new(
+                startTransform.M11, startTransform.M12, startTransform.M13, startTransform.M14,
+                startTransform.M21, startTransform.M22, startTransform.M23, startTransform.M24,
+                startTransform.M31, startTransform.M32, startTransform.M33, startTransform.M34,
+                startTransform.M41, startTransform.M42, startTransform.M43, startTransform.M44);
+        }
+        
+        public static Matrix4 BulletMatrixToOpenTkMatrix(Matrix startTransform)
         {
             return new(
                 startTransform.M11, startTransform.M12, startTransform.M13, startTransform.M14,

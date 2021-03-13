@@ -9,12 +9,12 @@ namespace Demo {
 	{
 		private static void Main(string[] args)
 		{
-			string[] acceptableInput = {"0", "1", "2"};
-			System.Console.WriteLine("Color Plane (0) | Texture Plane (1) | Cube (2)");
+			string[] acceptableInput = {"0", "1", "2", "3"};
+				System.Console.WriteLine("Color Plane (0) | Texture Plane (1) | Cube (2) | Cube Physics (3)");
 			string i;
 			while (!acceptableInput.Contains(i = System.Console.In.ReadLine()))
 			{
-				System.Console.WriteLine("0, 1, or 2 please.");
+				System.Console.WriteLine("0, 1, 2, or 3 please.");
 			}
 			switch (i)
 			{
@@ -22,19 +22,25 @@ namespace Demo {
 				{
 					var engine = new DemoColor(args);
 					engine.Run();
-					break;
+					return;
 				}
 				case "1":
 				{
 					var engine = new DemoTextured(args);
 					engine.Run();
-					break;
+					return;
 				}
 				case "2":
 				{
 					var engine = new DemoCube(args);
 					engine.Run();
-					break;
+					return;
+				}
+				case "3":
+				{
+					var engine = new DemoPhysics(args);
+					engine.Run();
+					return;
 				}
 			}
 		}
@@ -205,7 +211,7 @@ namespace Demo {
 		private Shader _triangleShader;
 		private Texture _crate;
 
-		public DemoCube(string[] args) : base(args, "Demo - Textured", new Vector2i(1600, 900))
+		public DemoCube(string[] args) : base(args, "Demo - Cube", new Vector2i(1600, 900))
 		{
 		}
 
@@ -241,6 +247,21 @@ namespace Demo {
 		public override void UnLoad()
 		{
 			_triangleShader.Dispose();
+		}
+	}
+	
+	internal class DemoPhysics : Engine
+	{
+		public DemoPhysics(string[] args) : base(args, "Demo - Physics", new Vector2i(1600, 900))
+		{
+		}
+
+		public override void Load()
+		{
+			Camera.Position = new Vector3(0, 0, -10);
+			World.AddCube(10.0f, false, new Vector3(0, -20, 0));
+			World.AddCube(2.0f, true, new Vector3(0, 0, 0));
+			World.AddCube(2.0f, true, new Vector3(0, 6, -1.1f));
 		}
 	}
 }

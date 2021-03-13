@@ -15,6 +15,14 @@
       <Content Include="Assets\icon.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Assets\Shaders\textured_mesh.frag" />
+      <Content Include="Assets\Shaders\textured_mesh.frag">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Assets\Shaders\textured_mesh.vert" />
+      <Content Include="Assets\Shaders\textured_mesh.vert">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

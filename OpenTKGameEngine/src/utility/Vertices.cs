@@ -2,27 +2,23 @@ using OpenTK.Mathematics;
 
 namespace OpenTKGameEngine.Utility
 {
-    public enum VertexType
+    public readonly struct Vertex
     {
-        Vertex,
-        TextureVertex,
-        ColorVertex
-    }
-    
-    public struct Vertex
-    {
-        public Vector3 Position { get; set; }
+        public Vertex(float x, float y, float z)
+        {
+            Position = new Vector3(x, y, z);
+        }
+        public Vector3 Position { get; }
     }
 
-    public struct TextureVertex
+    public readonly struct TextureVertex
     {
-        public Vector3 Position { get; set; }
-        public Vector2 Uv { get; set; }
-    }
-
-    public struct ColorVertex
-    {
-        public Vector3 Position { get; set; }
-        public Vector3 Color { get; set; }
+        public TextureVertex(float x, float y, float z, float u, float v)
+        {
+            Position = new Vector3(x, y, z);
+            Uv = new Vector2(u, v);
+        }
+        public Vector3 Position { get; }
+        public Vector2 Uv { get; }
     }
 }
