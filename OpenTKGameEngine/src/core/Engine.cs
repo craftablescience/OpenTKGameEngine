@@ -15,7 +15,7 @@ namespace OpenTKGameEngine.Core  {
 	public class Engine : GameWindow
 	{
 		public Color4 ClearColor { get; set; } = Color4.Black;
-		public Camera Camera;
+		public static Camera Camera { get; private set; }
 		public World World;
 		public double ElapsedTime { get; private set; }
 		private bool _firstMove = true;
