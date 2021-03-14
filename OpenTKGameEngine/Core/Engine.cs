@@ -25,7 +25,7 @@ namespace OpenTKGameEngine.Core  {
 		private SplashScreenPhase _splashScreenPhase = SplashScreenPhase.EngineLogo;
 		private string _splashPath;
 
-		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "Assets/icon.png", string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
+		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "EngineAssets/icon.png", string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
 			_fmodPath = fmodPath;
 			_splashPath = splashPath;
@@ -33,7 +33,7 @@ namespace OpenTKGameEngine.Core  {
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
 		{
-			iconPath ??= "Assets/icon.png";
+			iconPath ??= "EngineAssets/icon.png";
 			var settings = new NativeWindowSettings
 			{
 				Title = title,
@@ -66,7 +66,7 @@ namespace OpenTKGameEngine.Core  {
 		{
 			GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 			GL.Enable(EnableCap.DepthTest);
-			_splashScreen = new SplashScreen("Assets/Splashes/engine.png", "Assets/Splashes/fmod.png", _splashPath);
+			_splashScreen = new SplashScreen("EngineAssets/Splashes/engine.png", "EngineAssets/Splashes/fmod.png", _splashPath);
 			base.OnLoad();
 		}
 

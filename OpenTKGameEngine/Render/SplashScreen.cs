@@ -17,7 +17,7 @@ namespace OpenTKGameEngine.Render
             var v1 = new TextureVertex(1, -1, 0, 1, 0);
             var v2 = new TextureVertex(-1, 1, 0, 0, 1);
             var v3 = new TextureVertex(1, 1, 0, 1, 1);
-            _shader = new UnlitShader("Assets/Shaders/textured_mesh.vert", "Assets/Shaders/textured_mesh.frag");
+            _shader = new UnlitShader("EngineAssets/Shaders/textured_mesh.vert", "EngineAssets/Shaders/textured_mesh.frag");
             _shader.SetInt("texture0", 0);
             _engineLogo = new StaticTexturedMesh(engineLogoPath, _shader, "position", "textureCoords", true);
             _engineLogo.AddSquare(v0, v1, v2, v3);

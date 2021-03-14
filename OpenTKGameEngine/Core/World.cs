@@ -18,7 +18,7 @@ namespace OpenTKGameEngine.Core
         public void AddCube(float size, bool dynamic, Vector3 position)
         {
             _physicsObjects.Add(new PhysicsObject(
-                StaticTexturedMesh.GetCubeMesh(size, "Assets/icon.png"),
+                StaticTexturedMesh.GetCubeMesh(size, "EngineAssets/icon.png"),
                 dynamic ? 1f : 0f,
                 position,
                 new BoxShape(size / 2f),

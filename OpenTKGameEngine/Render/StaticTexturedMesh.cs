@@ -47,7 +47,7 @@ namespace OpenTKGameEngine.Render
         {
             if (_defaultShader != null)
                 return _defaultShader;
-            _defaultShader = new UnlitShader("Assets/Shaders/textured_mesh.vert", "Assets/Shaders/textured_mesh.frag");
+            _defaultShader = new UnlitShader("EngineAssets/Shaders/textured_mesh.vert", "EngineAssets/Shaders/textured_mesh.frag");
             _defaultShader.SetInt("texture0", 0);
             return _defaultShader;
         }

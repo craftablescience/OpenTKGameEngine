@@ -12,23 +12,23 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Assets\icon.png">
+      <Content Include="EngineAssets\icon.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Assets\Shaders\textured_mesh.frag" />
-      <Content Include="Assets\Shaders\textured_mesh.frag">
+      <Content Include="EngineAssets\Shaders\textured_mesh.frag">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Assets\Shaders\textured_mesh.vert" />
-      <Content Include="Assets\Shaders\textured_mesh.vert">
+      <Content Include="EngineAssets\Shaders\textured_mesh.vert">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Assets\Splashes\engine.png" />
-      <Content Include="Assets\Splashes\engine.png">
+      <Content Include="EngineAssets\Splashes\engine.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Assets\Splashes\fmod.png" />
-      <Content Include="Assets\Splashes\fmod.png">
+      <Content Include="EngineAssets\Splashes\fmod.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
