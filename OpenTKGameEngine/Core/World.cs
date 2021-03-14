@@ -15,10 +15,10 @@ namespace OpenTKGameEngine.Core
         private readonly Dictionary<StaticTexturedMesh,List<Vector3>> _staticTexturedMeshes = new();
         private static readonly List<Shader> Shaders = new();
 
-        public void AddCube(float size, bool dynamic, Vector3 position)
+        public void AddCube(float size, bool dynamic, Vector3 position, string texturePath)
         {
             _physicsObjects.Add(new PhysicsObject(
-                StaticTexturedMesh.GetCubeMesh(size, "EngineAssets/icon.png"),
+                StaticTexturedMesh.GetCubeMesh(size, texturePath),
                 dynamic ? 1f : 0f,
                 position,
                 new BoxShape(size / 2f),
