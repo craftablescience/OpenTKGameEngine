@@ -12,7 +12,7 @@ namespace OpenTKGameEngine.Core
         public PhysicsController PhysicsController { get; protected set; }
         public SoundController SoundController { get; protected set; }
         private readonly List<PhysicsObject> _physicsObjects = new();
-        private readonly Dictionary<StaticTexturedMesh,Vector3> _staticTexturedMeshes = new();
+        private readonly Dictionary<StaticTexturedMesh,List<Vector3>> _staticTexturedMeshes = new();
         private static readonly List<Shader> Shaders = new();
 
         public void AddCube(float size, bool dynamic, Vector3 position)
@@ -27,7 +27,18 @@ namespace OpenTKGameEngine.Core
 
         public void AddMesh(StaticTexturedMesh mesh, Vector3 position)
         {
-            _staticTexturedMeshes.Add(mesh, position);
+            if (_staticTexturedMeshes.ContainsKey(mesh))
+                _staticTexturedMeshes[mesh].Add(position);
+            else
+                _staticTexturedMeshes.Add(mesh, new List<Vector3>(new []{position}));
+        }
+        
+        public void AddMesh(StaticTexturedMesh mesh, List<Vector3> position)
+        {
+            if (_staticTexturedMeshes.ContainsKey(mesh))
+                _staticTexturedMeshes[mesh] = position;
+            else
+                _staticTexturedMeshes.Add(mesh, position);
         }
 
         public static void Register3DShader(Shader shader)
@@ -55,7 +66,10 @@ namespace OpenTKGameEngine.Core
             }
             foreach (var mesh in _staticTexturedMeshes.Keys)
             {
-                mesh.Render(time, Matrix4.CreateTranslation(_staticTexturedMeshes[mesh]));
+                foreach (var position in _staticTexturedMeshes[mesh])
+                {
+                    mesh.Render(time, Matrix4.CreateTranslation(position));
+                }
             }
             foreach (var physicsObject in _physicsObjects)
             {
