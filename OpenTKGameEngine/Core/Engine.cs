@@ -6,6 +6,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTKGameEngine.Input;
 using OpenTKGameEngine.Render;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -18,17 +19,34 @@ namespace OpenTKGameEngine.Core  {
 		public static Camera Camera { get; private set; }
 		private string _fmodPath;
 		public World World;
+		public InputRegistry InputRegistry { get; private set; }
 		public double ElapsedTime { get; private set; }
 		private bool _firstMove = true;
 		private Vector2 _lastPos;
 		private SplashScreen _splashScreen;
 		private SplashScreenPhase _splashScreenPhase = SplashScreenPhase.EngineLogo;
 		private string _splashPath;
+		private bool _loadCameraControls;
+		private bool _cameraPerspective;
+		private float _cameraSpeed = 1.5f;
+		public float CameraSpeed
+		{
+			get => _cameraSpeed;
+			set => _cameraSpeed = value;
+		}
+		private float _cameraSensitivity = 0.2f;
+		public float CameraSensitivity
+		{
+			get => _cameraSensitivity;
+			set => _cameraSensitivity = value;
+		}
 
-		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "EngineAssets/icon.png", string iconPath = null) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
+		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "EngineAssets/icon.png", string iconPath = null, bool loadCameraControls = true, bool cameraIsPerspective = true) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
 			_fmodPath = fmodPath;
 			_splashPath = splashPath;
+			_loadCameraControls = loadCameraControls;
+			_cameraPerspective = cameraIsPerspective;
 		}
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
@@ -112,62 +130,25 @@ namespace OpenTKGameEngine.Core  {
 			if (_splashScreenPhase == SplashScreenPhase.LoadComplete)
 			{
 				if (!IsFocused) return;
-				if (KeyboardState.IsKeyDown(Keys.Escape))
+				if (_loadCameraControls)
 				{
-					DestroyWindow();
+					var mouse = MouseState;
+					if (_firstMove)
+					{
+						_lastPos = new Vector2(mouse.X, mouse.Y);
+						_firstMove = false;
+					}
+					else
+					{
+						float deltaX = mouse.X - _lastPos.X;
+						float deltaY = mouse.Y - _lastPos.Y;
+						_lastPos = new Vector2(mouse.X, mouse.Y);
+						Camera.Yaw += deltaX * CameraSensitivity;
+						Camera.Pitch -= deltaY * CameraSensitivity;
+					}
 				}
-
-				const float cameraSpeed = 1.5f;
-				const float sensitivity = 0.2f;
-				var input = KeyboardState;
-
-				if (input.IsKeyDown(Keys.W))
-				{
-					Camera.Position += Camera.Front * cameraSpeed * (float) e.Time; // Forward
-				}
-
-				if (input.IsKeyDown(Keys.S))
-				{
-					Camera.Position -= Camera.Front * cameraSpeed * (float) e.Time; // Backwards
-				}
-
-				if (input.IsKeyDown(Keys.A))
-				{
-					Camera.Position -= Camera.Right * cameraSpeed * (float) e.Time; // Left
-				}
-
-				if (input.IsKeyDown(Keys.D))
-				{
-					Camera.Position += Camera.Right * cameraSpeed * (float) e.Time; // Right
-				}
-
-				if (input.IsKeyDown(Keys.Space))
-				{
-					Camera.Position += Camera.Up * cameraSpeed * (float) e.Time; // Up
-				}
-
-				if (input.IsKeyDown(Keys.LeftShift))
-				{
-					Camera.Position -= Camera.Up * cameraSpeed * (float) e.Time; // Down
-				}
-
-				var mouse = MouseState;
-
-				if (_firstMove)
-				{
-					_lastPos = new Vector2(mouse.X, mouse.Y);
-					_firstMove = false;
-				}
-				else
-				{
-					float deltaX = mouse.X - _lastPos.X;
-					float deltaY = mouse.Y - _lastPos.Y;
-					_lastPos = new Vector2(mouse.X, mouse.Y);
-					Camera.Yaw += deltaX * sensitivity;
-					Camera.Pitch -= deltaY * sensitivity;
-				}
-
 				World.Update(e.Time);
+				InputRegistry.UpdateInput(this, e.Time, KeyboardState);
 				Update();
 			}
 			else
@@ -191,9 +172,13 @@ namespace OpenTKGameEngine.Core  {
 					case SplashScreenPhase.LoadAssets:
 					{
 						Camera = new Camera(Vector3.UnitZ, Size.X / (float) Size.Y);
+						Camera.IsPerspective = _cameraPerspective;
 						CursorGrabbed = true;
 						World = new World();
 						World.Load(_fmodPath);
+						InputRegistry = new InputRegistry();
+						if (_loadCameraControls)
+							LoadCameraControls();
 						Load();
 						ResetView();
 						_splashScreenPhase = SplashScreenPhase.LoadComplete;
@@ -210,6 +195,16 @@ namespace OpenTKGameEngine.Core  {
 		public virtual void Update()
 		{
 			// overwrite in inherited classes
+		}
+
+		public void LoadCameraControls()
+		{
+			InputRegistry.BindKey(Keys.W,     (engine, time) => Camera.Position += Camera.Front * engine.CameraSpeed * (float)time);
+			InputRegistry.BindKey(Keys.S,     (engine, time) => Camera.Position -= Camera.Front * engine.CameraSpeed * (float)time);
+			InputRegistry.BindKey(Keys.A,     (engine, time) => Camera.Position -= Camera.Right * engine.CameraSpeed * (float)time);
+			InputRegistry.BindKey(Keys.D,     (engine, time) => Camera.Position += Camera.Right * engine.CameraSpeed * (float)time);
+			InputRegistry.BindKey(Keys.Space, (engine, time) => Camera.Position += Camera.Up    * engine.CameraSpeed * (float)time);
+			InputRegistry.BindKey(Keys.C,     (engine, time) => Camera.Position -= Camera.Up    * engine.CameraSpeed * (float)time);
 		}
 
 		protected override void OnResize(ResizeEventArgs e)

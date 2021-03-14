@@ -1,4 +1,5 @@
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Core;
 using OpenTKGameEngine.Render;
 
@@ -14,6 +15,7 @@ namespace Demo
         {
             var sound = World.SoundController.Load2DSoundFromFile("Assets/Sounds/ElevatorMusic.ogg", true);
             World.SoundController.PlaySound(sound, true);
+            InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow());
         }
     }
 }

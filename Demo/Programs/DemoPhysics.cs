@@ -1,4 +1,5 @@
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Core;
 
 namespace Demo
@@ -11,6 +12,7 @@ namespace Demo
 
         public override void Load()
         {
+            InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow());
             Camera.Position = new Vector3(0, -10, 10);
             World.AddCube(40.0f, false, new Vector3(0, -40, 0));
             World.AddCube(2.0f, true, new Vector3(0, 0, 0));

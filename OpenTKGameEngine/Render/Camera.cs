@@ -6,16 +6,14 @@ namespace OpenTKGameEngine.Render
     public class Camera
     {
         private Vector3 _front = -Vector3.UnitZ;
-        private Vector3 _up = Vector3.UnitY;
-        private Vector3 _right = Vector3.UnitX;
         private float _pitch;
         private float _yaw = -MathHelper.PiOver2;
         private float _fov = MathHelper.PiOver2;
         public Vector3 Position { get; set; }
         public float AspectRatio { private get; set; }
         public Vector3 Front => _front;
-        public Vector3 Up => _up;
-        public Vector3 Right => _right;
+        public Vector3 Up { get; private set; } = Vector3.UnitY;
+        public Vector3 Right { get; private set; } = Vector3.UnitX;
         public float Pitch
         {
             get => MathHelper.RadiansToDegrees(_pitch);
@@ -44,21 +42,26 @@ namespace OpenTKGameEngine.Render
                 _fov = MathHelper.DegreesToRadians(angle);
             }
         }
+
+        public bool IsPerspective { get; set; }
         
-        public Camera(Vector3 position, float aspectRatio)
+        public Camera(Vector3 position, float aspectRatio, bool isPerspective = true)
         {
             Position = position;
             AspectRatio = aspectRatio;
+            IsPerspective = isPerspective;
         }
         
         public Matrix4 GetViewMatrix()
         {
-            return Matrix4.LookAt(Position, Position + _front, _up);
+            return Matrix4.LookAt(Position, Position + _front, Up);
         }
         
         public Matrix4 GetProjectionMatrix()
         {
-            return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 100f);
+            return IsPerspective?
+                Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 8192f)
+                : Matrix4.CreateOrthographic(1600, 900, 0.01f, 8192f);
         }
         
         private void UpdateVectors()
@@ -67,8 +70,8 @@ namespace OpenTKGameEngine.Render
             _front.Y = MathF.Sin(_pitch);
             _front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
             _front = Vector3.Normalize(_front);
-            _right = Vector3.Normalize(Vector3.Cross(_front, Vector3.UnitY));
-            _up = Vector3.Normalize(Vector3.Cross(_right, _front));
+            Right = Vector3.Normalize(Vector3.Cross(_front, Vector3.UnitY));
+            Up = Vector3.Normalize(Vector3.Cross(Right, _front));
         }
     }
 }
