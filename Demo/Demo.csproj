@@ -60,6 +60,14 @@
       <Content Include="Assets\Textures\splash.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Assets\Models\deformedcube.mtl" />
+      <Content Include="Assets\Models\deformedcube.mtl">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Assets\Models\deformedcube.obj" />
+      <Content Include="Assets\Models\deformedcube.obj">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

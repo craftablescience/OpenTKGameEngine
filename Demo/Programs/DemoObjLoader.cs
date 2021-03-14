@@ -12,11 +12,18 @@ namespace Demo
 
         public override void Load()
         {
-            Camera.Position = new Vector3(0, 0, -10);
-            var mesh = new StaticTexturedMesh("Assets/Textures/container.png");
-            mesh.LoadObj("Assets/Models/demo.obj");
-            mesh.BakeMesh();
-            World.AddMesh(mesh, new Vector3(0,0,0));
+            Camera.Position = new Vector3(0, 0, 5);
+            var mesh1 = new StaticTexturedMesh("Assets/Textures/container.png");
+            mesh1.LoadObj("Assets/Models/demo.obj");
+            mesh1.BakeMesh();
+            var mesh2 = new StaticTexturedMesh("Assets/Textures/container.png");
+            mesh2.LoadObj("Assets/Models/deformedcube.obj");
+            mesh2.BakeMesh();
+            World.AddMesh(mesh1, new Vector3(0,0,0));
+            World.AddMesh(mesh2, new Vector3(0,3,0));
+            World.AddMesh(mesh2, new Vector3(0,-3,0));
+            World.AddMesh(mesh2, new Vector3(3,0,0));
+            World.AddMesh(mesh2, new Vector3(-3,0,0));
         }
     }
 }
