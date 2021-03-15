@@ -1,8 +1,4 @@
 ﻿using System.Linq;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
-using OpenTKGameEngine.Core;
-using OpenTKGameEngine.Render;
 
 namespace Demo {
 	internal static class Demo

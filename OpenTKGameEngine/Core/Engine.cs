@@ -16,7 +16,7 @@ namespace OpenTKGameEngine.Core  {
 	public class Engine : GameWindow
 	{
 		public Color4 ClearColor { get; set; } = Color4.Black;
-		public static Camera Camera { get; private set; }
+		public static PerspectiveCamera Camera { get; private set; }
 		private string _fmodPath;
 		public World World;
 		public InputRegistry InputRegistry { get; private set; }
@@ -27,7 +27,6 @@ namespace OpenTKGameEngine.Core  {
 		private SplashScreenPhase _splashScreenPhase = SplashScreenPhase.EngineLogo;
 		private string _splashPath;
 		private bool _loadCameraControls;
-		private bool _cameraPerspective;
 		private float _cameraSpeed = 1.5f;
 		public float CameraSpeed
 		{
@@ -41,12 +40,11 @@ namespace OpenTKGameEngine.Core  {
 			set => _cameraSensitivity = value;
 		}
 
-		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "EngineAssets/icon.png", string iconPath = null, bool loadCameraControls = true, bool cameraIsPerspective = true) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
+		public Engine(string[] args, string fmodPath, string title = "GameWindow", Vector2i? size = null, string splashPath = "EngineAssets/icon.png", string iconPath = null, bool loadCameraControls = true) : base(GameWindowSettings.Default, SetNativeWindowSettingsOnInit(title, size, iconPath))
 		{
 			_fmodPath = fmodPath;
 			_splashPath = splashPath;
 			_loadCameraControls = loadCameraControls;
-			_cameraPerspective = cameraIsPerspective;
 		}
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
@@ -109,7 +107,7 @@ namespace OpenTKGameEngine.Core  {
 				}
 				case SplashScreenPhase.LoadComplete:
 				{
-					World.Render(e.Time);
+					World.Render(Size.X, Size.Y, e.Time);
 					Render();
 					break;
 				}
@@ -171,8 +169,7 @@ namespace OpenTKGameEngine.Core  {
 					}
 					case SplashScreenPhase.LoadAssets:
 					{
-						Camera = new Camera(Vector3.UnitZ, Size.X / (float) Size.Y);
-						Camera.IsPerspective = _cameraPerspective;
+						Camera = new PerspectiveCamera(Vector3.UnitZ, Size.X / (float) Size.Y);
 						CursorGrabbed = true;
 						World = new World();
 						World.Load(_fmodPath);
@@ -205,6 +202,13 @@ namespace OpenTKGameEngine.Core  {
 			InputRegistry.BindKey(Keys.D,     (engine, time) => Camera.Position += Camera.Right * engine.CameraSpeed * (float)time, InputType.Continuous);
 			InputRegistry.BindKey(Keys.Space, (engine, time) => Camera.Position += Camera.Up    * engine.CameraSpeed * (float)time, InputType.Continuous);
 			InputRegistry.BindKey(Keys.C,     (engine, time) => Camera.Position -= Camera.Up    * engine.CameraSpeed * (float)time, InputType.Continuous);
+		}
+
+		public void ResizeWindow(int newWidth, int newHeight, WindowState state)
+		{
+			Size = new Vector2i(newWidth, newHeight);
+			WindowState = state;
+			OnResize(new ResizeEventArgs(newWidth, newHeight));
 		}
 
 		protected override void OnResize(ResizeEventArgs e)

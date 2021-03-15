@@ -21,6 +21,7 @@ namespace Demo
             World.AddCube(1.5f, true, new Vector3(0, 5, 1f), tex);
             World.AddCube(2.5f, true, new Vector3(0, 10, 0), tex);
             World.AddCube(2.0f, true, new Vector3(0, 15, 0), tex);
+            InputRegistry.BindKey(Keys.E, (_, _) => World.AddCube(3.0f, true, Camera.Position, tex), InputType.OnPressed);
         }
     }
 }

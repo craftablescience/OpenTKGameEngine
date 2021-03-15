@@ -57,7 +57,7 @@ namespace OpenTKGameEngine.Core
             PhysicsController.Update((float)time);
         }
 
-        public void Render(double time)
+        public void Render(int screenwidth, int screenheight, double time)
         {
             foreach (var shader in Shaders)
             {

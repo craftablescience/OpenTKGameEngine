@@ -3,7 +3,7 @@ using System;
 
 namespace OpenTKGameEngine.Render
 {
-    public class Camera
+    public class PerspectiveCamera
     {
         private Vector3 _front = -Vector3.UnitZ;
         private float _pitch;
@@ -42,14 +42,15 @@ namespace OpenTKGameEngine.Render
                 _fov = MathHelper.DegreesToRadians(angle);
             }
         }
-
-        public bool IsPerspective { get; set; }
+        public float NearDistance { get; set; }
+        public float FarDistance { get; set; }
         
-        public Camera(Vector3 position, float aspectRatio, bool isPerspective = true)
+        public PerspectiveCamera(Vector3 position, float aspectRatio, float nearDistance = 0.01f, float farDistance = 8192f)
         {
             Position = position;
             AspectRatio = aspectRatio;
-            IsPerspective = isPerspective;
+            NearDistance = nearDistance;
+            FarDistance = farDistance;
         }
         
         public Matrix4 GetViewMatrix()
@@ -59,9 +60,7 @@ namespace OpenTKGameEngine.Render
         
         public Matrix4 GetProjectionMatrix()
         {
-            return IsPerspective?
-                Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 8192f)
-                : Matrix4.CreateOrthographic(1600, 900, 0.01f, 8192f);
+            return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, NearDistance, FarDistance);
         }
         
         private void UpdateVectors()

@@ -2,7 +2,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Core;
 using OpenTKGameEngine.Input;
-using OpenTKGameEngine.Render;
 
 namespace Demo
 {
