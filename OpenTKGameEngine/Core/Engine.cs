@@ -199,12 +199,12 @@ namespace OpenTKGameEngine.Core  {
 
 		public void LoadCameraControls()
 		{
-			InputRegistry.BindKey(Keys.W,     (engine, time) => Camera.Position += Camera.Front * engine.CameraSpeed * (float)time);
-			InputRegistry.BindKey(Keys.S,     (engine, time) => Camera.Position -= Camera.Front * engine.CameraSpeed * (float)time);
-			InputRegistry.BindKey(Keys.A,     (engine, time) => Camera.Position -= Camera.Right * engine.CameraSpeed * (float)time);
-			InputRegistry.BindKey(Keys.D,     (engine, time) => Camera.Position += Camera.Right * engine.CameraSpeed * (float)time);
-			InputRegistry.BindKey(Keys.Space, (engine, time) => Camera.Position += Camera.Up    * engine.CameraSpeed * (float)time);
-			InputRegistry.BindKey(Keys.C,     (engine, time) => Camera.Position -= Camera.Up    * engine.CameraSpeed * (float)time);
+			InputRegistry.BindKey(Keys.W,     (engine, time) => Camera.Position += Camera.Front * engine.CameraSpeed * (float)time, InputType.Continuous);
+			InputRegistry.BindKey(Keys.S,     (engine, time) => Camera.Position -= Camera.Front * engine.CameraSpeed * (float)time, InputType.Continuous);
+			InputRegistry.BindKey(Keys.A,     (engine, time) => Camera.Position -= Camera.Right * engine.CameraSpeed * (float)time, InputType.Continuous);
+			InputRegistry.BindKey(Keys.D,     (engine, time) => Camera.Position += Camera.Right * engine.CameraSpeed * (float)time, InputType.Continuous);
+			InputRegistry.BindKey(Keys.Space, (engine, time) => Camera.Position += Camera.Up    * engine.CameraSpeed * (float)time, InputType.Continuous);
+			InputRegistry.BindKey(Keys.C,     (engine, time) => Camera.Position -= Camera.Up    * engine.CameraSpeed * (float)time, InputType.Continuous);
 		}
 
 		protected override void OnResize(ResizeEventArgs e)

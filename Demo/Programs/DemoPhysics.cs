@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Core;
+using OpenTKGameEngine.Input;
 
 namespace Demo
 {
@@ -12,7 +13,7 @@ namespace Demo
 
         public override void Load()
         {
-            InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow());
+            InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow(), InputType.OnPressed);
             Camera.Position = new Vector3(0, -10, 10);
             const string tex = "Assets/Textures/container.png";
             World.AddCube(40.0f, false, new Vector3(0, -40, 0), tex);

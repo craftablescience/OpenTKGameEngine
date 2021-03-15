@@ -2,6 +2,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Core;
+using OpenTKGameEngine.Input;
 using OpenTKGameEngine.Render;
 
 namespace Demo
@@ -46,7 +47,7 @@ namespace Demo
 			GL.EnableVertexAttribArray(_triangleShader.GetAttribLocation("position"));
 			GL.VertexAttribPointer(_triangleShader.GetAttribLocation("color"), 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 			GL.EnableVertexAttribArray(_triangleShader.GetAttribLocation("color"));
-			InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow());
+			InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow(), InputType.OnPressed);
 		}
 
 		public override void Render()

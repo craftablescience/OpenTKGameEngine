@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTKGameEngine.Core;
+using OpenTKGameEngine.Input;
 using OpenTKGameEngine.Render;
 
 namespace Demo
@@ -13,7 +14,7 @@ namespace Demo
 
         public override void Load()
         {
-            InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow());
+            InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow(), InputType.OnPressed);
             Camera.Position = new Vector3(0, 0, 5);
             var mesh1 = new StaticTexturedMesh("Assets/Textures/container.png");
             mesh1.LoadObj("Assets/Models/demo.obj");
