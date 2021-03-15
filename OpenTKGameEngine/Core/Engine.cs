@@ -108,7 +108,7 @@ namespace OpenTKGameEngine.Core  {
 				case SplashScreenPhase.LoadComplete:
 				{
 					World.Render(Size.X, Size.Y, e.Time);
-					Render();
+					Render(e.Time);
 					break;
 				}
 				default:
@@ -118,7 +118,7 @@ namespace OpenTKGameEngine.Core  {
 			base.OnUpdateFrame(e);
 		}
 		
-		public virtual void Render()
+		public virtual void Render(double time)
 		{
 			// overwrite in inherited classes
 		}

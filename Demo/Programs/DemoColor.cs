@@ -50,7 +50,7 @@ namespace Demo
 			InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow(), InputType.OnPressed);
 		}
 
-		public override void Render()
+		public override void Render(double time)
 		{
 			_triangleShader.Use();
 			GL.BindVertexArray(_vertexArrayId);

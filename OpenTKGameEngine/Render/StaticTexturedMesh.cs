@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
@@ -10,14 +11,14 @@ namespace OpenTKGameEngine.Render
 {
     public class StaticTexturedMesh
     {
-        public Texture Texture { get; private set; }
-        private string _texturePath;
-        private string _uniformPosition;
-        private string _uniformTextureCoords;
+        public Texture? Texture { get; private set; }
+        private readonly string _texturePath;
+        private readonly string _uniformPosition;
+        private readonly string _uniformTextureCoords;
         private int _vertexBufferId;
         private int _vertexArrayId;
         private int _elementBufferId;
-        private static Shader _defaultShader;
+        private static Shader? _defaultShader;
         public Shader Shader { get; }
         private readonly List<TextureVertex> _vertices = new();
         public float[] VertexArrayCache { get; private set; } = Array.Empty<float>();
@@ -25,19 +26,17 @@ namespace OpenTKGameEngine.Render
         public uint[] IndexArrayCache { get; private set; } = Array.Empty<uint>();
         private uint _currentIndex;
         public bool Finalized;
-        private bool _is2d;
+        private readonly bool _is2d;
+        private readonly bool _genMipmaps;
 
-        public StaticTexturedMesh(string texturePath) : this(texturePath, SetDefaultShader(), "position", "textureCoords")
-        {
-        }
-
-        public StaticTexturedMesh(string texturePath, Shader shader, string uniformPosition, string uniformTextureCoords, bool is2d = false)
+        public StaticTexturedMesh(string texturePath, Shader? shader = null, string? uniformPosition = null, string? uniformTextureCoords = null, bool is2d = false, bool genMipmaps = true)
         {
             _is2d = is2d;
+            _genMipmaps = genMipmaps;
             _texturePath = texturePath;
-            _uniformPosition = uniformPosition;
-            _uniformTextureCoords = uniformTextureCoords;
-            Shader = shader;
+            _uniformPosition = uniformPosition ?? "position";
+            _uniformTextureCoords = uniformTextureCoords ?? "textureCoords";
+            Shader = shader ?? SetDefaultShader();
             if (!is2d)
                 World.Register3DShader(Shader);
             Finalized = false;
@@ -173,7 +172,7 @@ namespace OpenTKGameEngine.Render
             _elementBufferId = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferId);
             GL.BufferData(BufferTarget.ElementArrayBuffer, IndexArrayCache.Length * sizeof(uint), IndexArrayCache, BufferUsageHint.StaticDraw);
-            Texture = Texture.LoadFromFile(_texturePath);
+            Texture = Texture.LoadFromFile(_texturePath, _genMipmaps);
             Shader.Use();
             GL.VertexAttribPointer(Shader.GetAttribLocation(_uniformPosition), 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
             GL.EnableVertexAttribArray(Shader.GetAttribLocation(_uniformPosition));
@@ -185,7 +184,7 @@ namespace OpenTKGameEngine.Render
         public void Render(double time, Matrix4 position)
         {
             GL.BindVertexArray(_vertexArrayId);
-            Texture.Use(TextureUnit.Texture0);
+            Texture?.Use(TextureUnit.Texture0);
             if (!_is2d)
                 Shader.SetMatrix4("model", Matrix4.Identity * position);
             else

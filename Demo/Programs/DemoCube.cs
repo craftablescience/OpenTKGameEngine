@@ -80,7 +80,7 @@ namespace Demo
 			InputRegistry.BindKey(Keys.Escape, (_, _) => DestroyWindow(), InputType.OnPressed);
 		}
 
-		public override void Render()
+		public override void Render(double time)
 		{
 			GL.BindVertexArray(_vertexArrayId);
 			_crate.Use(TextureUnit.Texture0);
