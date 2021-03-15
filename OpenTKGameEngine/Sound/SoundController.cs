@@ -42,14 +42,9 @@ namespace OpenTKGameEngine.Sound
             return sound;
         }
 
-        public void PlaySound(Sound sound, bool master = false)
+        public Channel PlaySound(Sound sound)
         {
-            if (master)
-                FmodSystem.PlaySound(sound.FModSound);
-            else
-            {
-                // todo: figure out channels
-            }
+            return FmodSystem.PlaySound(sound.FModSound);
         }
     }
 }

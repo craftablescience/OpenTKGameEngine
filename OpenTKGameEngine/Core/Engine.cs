@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FmodAudio;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -27,7 +28,7 @@ namespace OpenTKGameEngine.Core  {
 		private SplashScreenPhase _splashScreenPhase = SplashScreenPhase.EngineLogo;
 		private string _splashPath;
 		private bool _loadCameraControls;
-		private float _cameraSpeed = 1.5f;
+		private float _cameraSpeed = 4f;
 		public float CameraSpeed
 		{
 			get => _cameraSpeed;
@@ -45,6 +46,7 @@ namespace OpenTKGameEngine.Core  {
 			_fmodPath = fmodPath;
 			_splashPath = splashPath;
 			_loadCameraControls = loadCameraControls;
+			IsEventDriven = false;
 		}
 
 		private static NativeWindowSettings SetNativeWindowSettingsOnInit(string title, Vector2i? size, string iconPath)
@@ -192,6 +194,28 @@ namespace OpenTKGameEngine.Core  {
 		public virtual void Update()
 		{
 			// overwrite in inherited classes
+		}
+
+		protected override void OnFocusedChanged(FocusedChangedEventArgs e)
+		{
+			if (_splashScreenPhase > SplashScreenPhase.LoadAssets)
+			{
+				if (e.IsFocused)
+					Resume();
+				else
+					Pause();
+			}
+			base.OnFocusedChanged(e);
+		}
+
+		public virtual void Pause()
+		{
+			// override in inherited classes
+		}
+
+		public virtual void Resume()
+		{
+			// override in inherited classes
 		}
 
 		public void LoadCameraControls()

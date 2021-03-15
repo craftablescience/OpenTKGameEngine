@@ -17,12 +17,21 @@ namespace OpenTKGameEngine.Core
 
         public void AddCube(float size, bool dynamic, Vector3 position, string texturePath)
         {
-            _physicsObjects.Add(new PhysicsObject(
+            AddPhysicsObject(
                 StaticTexturedMesh.GetCubeMesh(size, texturePath),
                 dynamic ? 1f : 0f,
                 position,
-                new BoxShape(size / 2f),
-                PhysicsController));
+                new BoxShape(size / 2f));
+        }
+
+        public void AddPhysicsObject(StaticTexturedMesh mesh, float mass, Vector3 position, CollisionShape collisionShape)
+        {
+            _physicsObjects.Add(new PhysicsObject(mesh, mass, position, collisionShape, PhysicsController));
+        }
+        
+        public void AddPhysicsObject(PhysicsObject obj)
+        {
+            _physicsObjects.Add(obj);
         }
 
         public void AddMesh(StaticTexturedMesh mesh, Vector3 position)
